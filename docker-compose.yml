@@ -1,0 +1,16 @@
+services:
+  nuxt-app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: nuxt_dev_container
+    ports:
+      - "3000:10000"
+    volumes:
+      # Пробрасываем текущую директорию локально внутрь контейнера
+      - .:/app
+      # Исключаем локальную node_modules, чтобы использовать зависимости контейнера
+      - /app/node_modules
+    environment:
+      - HOST=0.0.0.0
+      - PORT=10000
