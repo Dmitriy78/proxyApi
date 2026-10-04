@@ -3,11 +3,11 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# 1. Копируем файлы зависимостей
-COPY package*.json ./
+# Явно отключаем production-режим на время установки и сборки
+ENV NODE_ENV=development
 
-# 2. Устанавливаем ВСЕ зависимости (включая devDependencies, где лежит nuxt)
-RUN npm ci
+COPY package*.json ./
+RUN npm install
 
 # 3. Копируем исходный код
 COPY . .
