@@ -1,22 +1,19 @@
-# ЭТАП 1: Сборка приложения
+# 1. Этап сборки
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Явно отключаем production-режим на время установки и сборки
-ENV NODE_ENV=development
-
+# Копируем манифесты
 COPY package*.json ./
+
+# Устанавливаем ВСЕ зависимости
 RUN npm install
 
-# 3. Копируем исходный код
+# Копируем исходники и собираем .output
 COPY . .
-
-# 4. Собираем продакшен-бандл в папку .output
 RUN npm run build
 
-
-# ЭТАП 2: Запуск продакшен-сервера
+# 2. Этап запуска
 FROM node:20-alpine AS runner
 
 WORKDIR /app
@@ -25,7 +22,7 @@ ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=10000
 
-# Копируем ТОЛЬКО готовый результат сборки из первого этапа
+# Копируем только скомпилированный сервер
 COPY --from=builder /app/.output ./.output
 
 EXPOSE 10000
